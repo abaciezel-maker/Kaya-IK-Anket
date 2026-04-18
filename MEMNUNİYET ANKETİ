@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Kaya Hotels & Resorts — İK Memnuniyet ve Değerlendirme Anketi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --navy:#0C1C40;
+    --navy-80:#1a2c54;
+    --navy-60:#3b4a72;
+    --gold:#B8973A;
+    --gold-light:#d4b256;
+    --cream:#F8F4EE;
+    --cream-dark:#EDE4D3;
+    --ink:#1a1a1a;
+    --muted:#6b7280;
+    --border:#e4dcc9;
+    --success:#2e7d4f;
+    --danger:#b91c1c;
+    --shadow:0 10px 40px rgba(12,28,64,.08);
+    --shadow-lg:0 20px 60px rgba(12,28,64,.15);
+    --radius:14px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--cream);color:var(--ink);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input,textarea,select{font-family:inherit;font-size:inherit}
+
+  /* === TOP BAR === */
+  .topbar{position:sticky;top:0;z-index:50;background:var(--navy);color:#fff;border-bottom:3px solid var(--gold)}
+  .topbar-inner{max-width:980px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .brand-mark{width:38px;height:38px;border:1.5px solid var(--gold);border-radius:50%;display:grid;place-items:center;flex-shrink:0;background:rgba(184,151,58,.1)}
+  .brand-mark span{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-weight:600;letter-spacing:.5px}
+  .brand-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+  .brand-text .t1{font-size:13px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+  .brand-text .t2{font-size:11px;color:#cfd5e5;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .progress-wrap{flex:1;max-width:320px;display:none}
+  .progress-wrap.active{display:block}
+  .progress-track{height:6px;background:rgba(255,255,255,.12);border-radius:100px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 100%);width:0%;transition:width .4s ease;border-radius:100px}
+  .progress-label{font-size:10px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-top:6px;font-weight:600;text-align:right}
+  .secure-badge{font-size:10px;letter-spacing:1.5px;color:#9faabf;text-transform:uppercase;display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .secure-badge::before{content:"";width:6px;height:6px;background:#4ade80;border-radius:50%;box-shadow:0 0 8px #4ade80}
+
+  /* === MAIN CONTAINER === */
+  .container{max-width:820px;margin:0 auto;padding:32px 20px 80px}
+
+  /* === HERO === */
+  .hero{background:#fff;border-radius:var(--radius);padding:44px 40px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:28px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--navy) 0%,var(--gold) 50%,var(--navy) 100%)}
+  .hero .kicker{font-size:11px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:14px}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--navy);line-height:1.2;margin-bottom:10px;letter-spacing:-.5px}
+  .hero h2{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--gold);line-height:1.3;margin-bottom:20px;font-style:italic}
+  .hero-divider{width:60px;height:2px;background:var(--gold);margin-bottom:20px}
+  .hero p{color:#4a5568;line-height:1.7;margin-bottom:12px;font-size:15px}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;background:var(--cream);border:1px solid var(--border);border-radius:100px;font-size:11px;color:var(--navy);font-weight:600;letter-spacing:.3px}
+  .chip.gold{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+
+  /* === SCALE LEGEND === */
+  .scale-legend{background:var(--navy);color:#fff;border-radius:var(--radius);padding:22px 28px;margin-bottom:28px;box-shadow:var(--shadow)}
+  .scale-legend-title{font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:12px;text-align:center}
+  .scale-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .scale-item{text-align:center;padding:10px 4px;border-right:1px solid rgba(255,255,255,.08)}
+  .scale-item:last-child{border-right:none}
+  .scale-num{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold);font-weight:600;line-height:1;margin-bottom:4px}
+  .scale-text{font-size:10px;color:#cfd5e5;letter-spacing:.3px;line-height:1.2}
+
+  /* === SECTIONS === */
+  .section{background:#fff;border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:22px}
+  .section-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:16px;border-bottom:2px solid var(--cream)}
+  .section-badge{width:38px;height:38px;border-radius:50%;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;flex-shrink:0;border:1.5px solid var(--gold)}
+  .section-title{flex:1;min-width:0}
+  .section-title h3{font-size:16px;color:var(--navy);font-weight:700;letter-spacing:.2px;line-height:1.3}
+  .section-title p{font-size:12px;color:var(--muted);margin-top:2px}
+
+  /* === FORM ELEMENTS === */
+  .field{margin-bottom:18px}
+  .field-label{display:block;font-size:13px;color:var(--navy);font-weight:600;margin-bottom:8px}
+  .field-required::after{content:" *";color:var(--gold)}
+  .field input[type="text"],.field input[type="date"],.field select,.field textarea{width:100%;padding:11px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--ink);font-size:14px;transition:all .2s}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);background:#fff;box-shadow:0 0 0 3px rgba(184,151,58,.15)}
+  .field textarea{resize:vertical;min-height:90px;line-height:1.5}
+  .field.error input,.field.error select,.field.error textarea{border-color:var(--danger);background:#fef2f2}
+  .field-hint{font-size:11px;color:var(--muted);margin-top:4px}
+
+  /* === LIKERT === */
+  .question{padding:18px 0;border-bottom:1px dashed var(--border)}
+  .question:last-child{border-bottom:none}
+  .question.error{background:linear-gradient(90deg,rgba(185,28,28,.04),transparent);margin:0 -14px;padding:18px 14px;border-radius:var(--radius-sm)}
+  .q-row{display:grid;grid-template-columns:40px 1fr;gap:14px;margin-bottom:12px;align-items:start}
+  .q-num{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:600;line-height:1}
+  .q-text{font-size:14px;color:var(--ink);line-height:1.5;font-weight:500}
+  .likert{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-left:54px}
+  .likert.likert-10{grid-template-columns:repeat(10,1fr)}
+  .likert-opt{position:relative}
+  .likert-opt input{position:absolute;opacity:0;pointer-events:none}
+  .likert-opt label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 4px;background:var(--cream);border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;min-height:58px;font-size:11px;color:var(--muted);font-weight:600;line-height:1.2;text-align:center}
+  .likert-opt label:hover{border-color:var(--gold);background:#fff}
+  .likert-opt input:checked + label{background:var(--navy);border-color:var(--gold);color:#fff;transform:translateY(-1px);box-shadow:0 4px 12px rgba(12,28,64,.15)}
+  .likert-opt input:checked + label .l-num{color:var(--gold)}
+  .l-num{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--navy);line-height:1;margin-bottom:2px}
+  .likert.likert-10 .l-num{font-size:15px}
+  .likert.likert-10 .likert-opt label{min-height:44px;padding:8px 2px}
+  .likert.likert-10 .l-text{display:none}
+
+  .likert-ends{display:flex;justify-content:space-between;margin-left:54px;margin-top:6px;font-size:10px;color:var(--muted);letter-spacing:.3px}
+
+  /* === INFO GRID === */
+  .info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+
+  /* === SUBMIT === */
+  .submit-box{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-80) 100%);color:#fff;border-radius:var(--radius);padding:32px;text-align:center;box-shadow:var(--shadow-lg);margin-top:28px;position:relative;overflow:hidden}
+  .submit-box::before{content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(184,151,58,.15),transparent 70%);border-radius:50%}
+  .submit-box h3{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold);margin-bottom:8px;font-weight:600}
+  .submit-box p{color:#cfd5e5;font-size:13px;margin-bottom:20px;line-height:1.6}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 36px;background:var(--gold);color:var(--navy);font-weight:700;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;border-radius:var(--radius-sm);transition:all .2s;border:none;cursor:pointer;min-width:220px;position:relative;z-index:1}
+  .btn:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,151,58,.4)}
+  .btn:active{transform:translateY(0)}
+  .btn.secondary{background:transparent;color:var(--gold);border:1.5px solid var(--gold)}
+  .btn.secondary:hover{background:var(--gold);color:var(--navy)}
+  .btn.danger{background:var(--danger);color:#fff}
+  .btn.danger:hover{background:#991b1b}
+
+  /* === VALIDATION BANNER === */
+  .validation-banner{display:none;position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--danger);color:#fff;padding:14px 24px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);z-index:100;font-size:13px;font-weight:600;max-width:90vw;text-align:center;animation:slideDown .3s ease}
+  .validation-banner.show{display:flex;align-items:center;gap:10px}
+  @keyframes slideDown{from{transform:translate(-50%,-20px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+
+  /* === SUCCESS === */
+  .success-screen{text-align:center;padding:60px 40px}
+  .success-icon{width:90px;height:90px;margin:0 auto 24px;border-radius:50%;background:linear-gradient(135deg,var(--success),#48a06f);display:grid;place-items:center;box-shadow:0 10px 30px rgba(46,125,79,.3)}
+  .success-icon svg{width:46px;height:46px;stroke:#fff;stroke-width:3;fill:none}
+  .success-screen h2{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--navy);margin-bottom:12px;font-weight:600}
+  .success-screen p{color:var(--muted);font-size:15px;line-height:1.7;max-width:480px;margin:0 auto 24px}
+  .success-meta{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:var(--cream);border-radius:100px;font-size:12px;color:var(--navy);font-weight:600;letter-spacing:.5px;margin-top:8px}
+
+  /* === ADMIN === */
+  .admin-login{max-width:440px;margin:60px auto;background:#fff;border-radius:var(--radius);padding:44px 36px;box-shadow:var(--shadow-lg);text-align:center;border:1px solid var(--border)}
+  .admin-login .lock{width:60px;height:60px;margin:0 auto 20px;border-radius:50%;background:var(--navy);display:grid;place-items:center}
+  .admin-login .lock svg{width:28px;height:28px;stroke:var(--gold);stroke-width:2;fill:none}
+  .admin-login h2{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--navy);margin-bottom:8px;font-weight:600}
+  .admin-login p{color:var(--muted);font-size:13px;margin-bottom:24px}
+  .admin-login input{width:100%;padding:12px 14px;background:var(--cream);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;margin-bottom:16px;text-align:center;letter-spacing:2px}
+  .admin-login input:focus{outline:none;border-color:var(--gold)}
+  .admin-login .error-msg{color:var(--danger);font-size:12px;margin-top:10px;min-height:16px}
+
+  .admin-dashboard{padding:0}
+  .admin-header{background:var(--navy);color:#fff;border-radius:var(--radius);padding:28px 32px;margin-bottom:24px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  .admin-header h2{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--gold);font-weight:600;letter-spacing:.2px}
+  .admin-header .subtitle{font-size:12px;color:#cfd5e5;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-top:4px}
+  .admin-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .admin-actions .btn{padding:10px 18px;min-width:auto;font-size:11px;letter-spacing:1px}
+
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+  .stat-card{background:#fff;border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .stat-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold)}
+  .stat-label{font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;font-weight:700;margin-bottom:8px}
+  .stat-value{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--navy);font-weight:600;line-height:1}
+  .stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+  .panel{background:#fff;border-radius:var(--radius);padding:28px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:22px}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--cream);gap:12px;flex-wrap:wrap}
+  .panel-title{font-size:14px;color:var(--navy);font-weight:700;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+  .panel-title::before{content:"";width:4px;height:18px;background:var(--gold);border-radius:2px}
+
+  .qr-panel{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+  .qr-box{background:#fff;padding:16px;border:2px solid var(--navy);border-radius:var(--radius-sm);box-shadow:0 4px 16px rgba(12,28,64,.08)}
+  #qrcode img,#qrcode canvas{display:block}
+  .qr-info h4{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--navy);margin-bottom:8px;font-weight:600}
+  .qr-info p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:12px}
+  .qr-url{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--cream);border:1px dashed var(--border);border-radius:var(--radius-sm);font-family:monospace;font-size:11px;color:var(--navy);word-break:break-all;margin-bottom:10px}
+  .qr-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn-sm{padding:8px 14px;font-size:11px;letter-spacing:1px;min-width:auto}
+
+  .responses-table{width:100%;border-collapse:collapse;font-size:13px}
+  .responses-table th{background:var(--navy);color:var(--gold);padding:12px 14px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+  .responses-table th:first-child{border-top-left-radius:var(--radius-sm)}
+  .responses-table th:last-child{border-top-right-radius:var(--radius-sm)}
+  .responses-table td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--ink)}
+  .responses-table tr:hover td{background:var(--cream)}
+  .responses-table .score-pill{display:inline-block;padding:3px 10px;border-radius:100px;font-weight:700;font-size:12px}
+  .score-high{background:#dcfce7;color:#166534}
+  .score-mid{background:#fef3c7;color:#854d0e}
+  .score-low{background:#fee2e2;color:#991b1b}
+  .view-btn{padding:6px 12px;background:var(--navy);color:var(--gold);border-radius:var(--radius-sm);font-size:11px;font-weight:600;letter-spacing:.5px;cursor:pointer;border:none}
+  .view-btn:hover{background:var(--gold);color:var(--navy)}
+
+  .empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
+  .empty-state-icon{font-family:'Cormorant Garamond',serif;font-size:64px;color:var(--border);margin-bottom:12px;line-height:1}
+  .empty-state h4{color:var(--navy);font-size:16px;margin-bottom:6px}
+
+  /* === MODAL === */
+  .modal{display:none;position:fixed;inset:0;background:rgba(12,28,64,.75);z-index:200;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;backdrop-filter:blur(4px)}
+  .modal.show{display:flex}
+  .modal-content{background:#fff;border-radius:var(--radius);max-width:720px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+  .modal-head{position:sticky;top:0;background:var(--navy);color:#fff;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;border-top-left-radius:var(--radius);border-top-right-radius:var(--radius);z-index:1}
+  .modal-head h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:600}
+  .modal-close{width:32px;height:32px;background:rgba(255,255,255,.1);border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#fff;font-size:18px}
+  .modal-close:hover{background:rgba(255,255,255,.2)}
+  .modal-body{padding:28px}
+  .response-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;padding:14px;background:var(--cream);border-radius:var(--radius-sm)}
+  .response-meta-item{font-size:12px}
+  .response-meta-item .k{color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-size:10px;font-weight:700;margin-bottom:2px}
+  .response-meta-item .v{color:var(--navy);font-weight:600}
+  .response-section{margin-bottom:18px}
+  .response-section-title{font-size:11px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+  .response-q{display:grid;grid-template-columns:1fr auto;gap:12px;padding:8px 0;font-size:13px;border-bottom:1px dashed var(--border)}
+  .response-q:last-child{border-bottom:none}
+  .response-q .q{color:var(--ink)}
+  .response-q .a{font-weight:700;color:var(--navy)}
+  .response-open{padding:10px 12px;background:var(--cream);border-radius:var(--radius-sm);margin-top:6px;font-size:13px;color:var(--navy);line-height:1.5;font-style:italic}
+
+  /* === CHARTS === */
+  .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:22px}
+  .chart-card{background:#fff;border-radius:var(--radius);padding:22px;border:1px solid var(--border);box-shadow:var(--shadow)}
+  .chart-title{font-size:12px;letter-spacing:1.5px;color:var(--navy);text-transform:uppercase;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .chart-wrap{position:relative;height:260px}
+
+  /* === FOOTER === */
+  .footer-signature{margin-top:40px;padding:24px;background:#fff;border-radius:var(--radius);border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:11px}
+  .sig-box{text-align:center;padding:14px}
+  .sig-box .k{color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-bottom:8px;font-size:10px}
+  .sig-box .v{color:var(--navy);font-weight:600;font-size:13px;font-family:'Cormorant Garamond',serif}
+
+  .doc-footer{text-align:center;padding:30px 20px 10px;color:var(--muted);font-size:11px;letter-spacing:.5px}
+  .doc-footer strong{color:var(--navy)}
+
+  /* === RESPONSIVE === */
+  @media (max-width:720px){
+    .container{padding:20px 14px 60px}
+    .hero{padding:32px 24px}
+    .hero h1{font-size:26px}
+    .hero h2{font-size:16px}
+    .section{padding:22px 18px}
+    .scale-legend{padding:16px 14px}
+    .scale-grid{grid-template-columns:repeat(5,1fr);gap:4px}
+    .scale-item{padding:6px 2px}
+    .scale-num{font-size:18px}
+    .scale-text{font-size:9px}
+    .likert{grid-template-columns:repeat(5,1fr);gap:4px;margin-left:0;margin-top:10px}
+    .likert.likert-10{grid-template-columns:repeat(10,1fr);gap:3px}
+    .likert-opt label{padding:10px 2px;min-height:50px;font-size:9px}
+    .likert-opt .l-text{display:none}
+    .likert-ends{margin-left:0}
+    .q-row{grid-template-columns:32px 1fr;gap:10px}
+    .q-num{font-size:18px}
+    .q-text{font-size:13px}
+    .info-grid{grid-template-columns:1fr;gap:12px}
+    .admin-header{padding:20px;flex-direction:column;align-items:flex-start}
+    .stats-grid{grid-template-columns:repeat(2,1fr)}
+    .qr-panel{grid-template-columns:1fr;text-align:center}
+    .chart-grid{grid-template-columns:1fr}
+    .brand-text .t1{font-size:11px}
+    .brand-text .t2{display:none}
+    .secure-badge{display:none}
+    .progress-wrap{max-width:200px}
+    .response-meta{grid-template-columns:1fr}
+    .footer-signature{grid-template-columns:1fr}
+    .btn{min-width:auto;width:100%}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark"><span>K</span></div>
+      <div class="brand-text">
+        <div class="t1">Kaya Hotels &amp; Resorts</div>
+        <div class="t2" id="brandSub">İnsan Kaynakları — Memnuniyet Anketi</div>
+      </div>
+    </div>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">%0 tamamlandı</div>
+    </div>
+    <div class="secure-badge" id="secureBadge">Güvenli Bağlantı</div>
+  </div>
+</div>
+
+<div class="validation-banner" id="validationBanner">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <span id="validationText">Lütfen tüm soruları yanıtlayınız.</span>
+</div>
+
+<div class="container" id="app"></div>
+
+<script>
+/* ==========================================================================
+   KAYA HOTELS & RESORTS — İK MEMNUNİYET ve DEĞERLENDİRME ANKET SİSTEMİ
+   Doküman: KPS.IK.IS01_FR67 | Rev.00 | 17.04.2026
+   ========================================================================== */
+
+/* ---------- STORAGE ADAPTER (window.storage + localStorage fallback) ---------- */
+const Storage = {
+  hasClaudeStorage(){
+    return typeof window !== 'undefined' && window.storage && typeof window.storage.set === 'function';
+  },
+  async get(key){
+    if(this.hasClaudeStorage()){
+      try{ const r = await window.storage.get(key, true); return r ? JSON.parse(r.value) : null; }
+      catch(e){ return null; }
+    }
+    try{ const v = window.localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch(e){ return null; }
+  },
+  async set(key, value){
+    if(this.hasClaudeStorage()){
+      try{ return await window.storage.set(key, JSON.stringify(value), true); } catch(e){}
+    }
+    try{ window.localStorage.setItem(key, JSON.stringify(value)); } catch(e){}
+  },
+  async list(){
+    if(this.hasClaudeStorage()){
+      try{ const r = await window.storage.list('kaya-ik-anket:', true); return r ? r.keys : []; } catch(e){ return []; }
+    }
+    return [];
+  }
+};
+
+/* ---------- ADMIN PASSWORD ---------- */
+const ADMIN_PASSWORD = 'kaya2026';
+
+/* ---------- SURVEY SCHEMA ---------- */
+const SURVEY = {
+  meta: {
+    docNo: 'KPS.IK.IS01_FR67',
+    revNo: '00',
+    date: '17.04.2026',
+    title: 'İnsan Kaynakları Departmanı',
+    subtitle: 'Memnuniyet ve Değerlendirme Anketi'
+  },
+  scale5: ['Kesinlikle Katılmıyorum','Katılmıyorum','Kısmen Katılıyorum','Katılıyorum','Kesinlikle Katılıyorum'],
+  info: [
+    { id:'dept', label:'Departman', type:'select', options:[
+      'Ön Büro','Kat Hizmetleri','Yiyecek & İçecek — Servis','Yiyecek & İçecek — Mutfak',
+      'Teknik Servis','Satın Alma','Muhasebe & Finans','Güvenlik',
+      'Animasyon','Spa & Wellness','Satış & Pazarlama','Rezervasyon',
+      'Bahçe & Çevre Düzenleme','İnsan Kaynakları','Kalite & Operasyonel Mükemmellik','Diğer'
+    ]},
+    { id:'position', label:'Görev / Pozisyon', type:'text', placeholder:'Örn. Müdür, Şef, Uzman' },
+    { id:'tenure', label:'Kaya\'daki Görev Süresi', type:'select', options:[
+      '0 – 6 ay','6 ay – 1 yıl','1 – 3 yıl','3 – 5 yıl','5 – 10 yıl','10 yıl ve üzeri'
+    ]},
+    { id:'date', label:'Değerlendirme Tarihi', type:'date' }
+  ],
+  sections: [
+    { code:'A', title:'Genel Değerlendirme', scale:5, questions:[
+      { n:1, text:'İK Departmanı, otelimizin işleyişine katkı sağlar.' },
+      { n:2, text:'İK\'nın yaptığı işler, otelimizin ve departmanımın ihtiyaçlarına uygundur.' },
+      { n:3, text:'İK Departmanı\'nın çalışmalarından genel olarak memnunum.' }
+    ]},
+    { code:'B', title:'İletişim ve Ulaşılabilirlik', scale:5, questions:[
+      { n:4, text:'İK ekibine ihtiyacım olduğunda kolayca ulaşabilirim.' },
+      { n:5, text:'İK\'dan gelen duyurular ve bilgiler zamanında, açık ve anlaşılır şekilde iletilir.' },
+      { n:6, text:'Sorularıma ve isteklerime kısa sürede cevap verilir.' },
+      { n:7, text:'İK ekibi bana saygılı ve yardımcı bir şekilde davranır.' },
+      { n:8, text:'İşimle ilgili değişiklikleri İK bana önceden haber verir.' }
+    ]},
+    { code:'C', title:'İşe Alım ve Personel Planlama', scale:5, questions:[
+      { n:9, text:'Departmanımın personel ihtiyaçları zamanında karşılanır.' },
+      { n:10, text:'İşe alınan yeni çalışanlar, yapacakları işe uygun kişilerdir.' },
+      { n:11, text:'Yeni çalışanlara verilen oryantasyon, işe uyum sağlamalarına yardımcı olur.' },
+      { n:12, text:'Sezonluk ve dönemsel personel planlamaları departmanımın iş akışına uygun yapılır.' }
+    ]},
+    { code:'D', title:'Çalışan İlişkileri ve Sorun Çözümü', scale:5, questions:[
+      { n:13, text:'Personelle yaşanan sorunların çözümünde İK bize destek olur.' },
+      { n:14, text:'Şikâyet ve anlaşmazlık durumlarında İK adil ve tarafsız davranır.' },
+      { n:15, text:'Çalışanların mutluluğunu ve motivasyonunu artıracak çalışmalar yapılır.' },
+      { n:16, text:'İK, çalışanların görüş ve önerilerini dinler ve dikkate alır.' },
+      { n:17, text:'İK ile paylaşılan özel bilgiler gizli tutulur ve herkese eşit davranılır.' }
+    ]},
+    { code:'E', title:'Günlük İş Desteği ve İş Birliği', scale:5, questions:[
+      { n:18, text:'İK, günlük işlerde ihtiyacım olan desteği zamanında verir.' },
+      { n:19, text:'Yoğun dönemlerde İK ile iş birliğimiz sorunsuz ilerler.' },
+      { n:20, text:'Vardiya, izin ve puantaj işlemleri doğru ve açık şekilde yürütülür.' },
+      { n:21, text:'İşimde karşılaştığım sorunların çözümünde İK ile rahat çalışabiliyorum.' },
+      { n:22, text:'İK ekibi, departman yöneticileriyle düzenli olarak görüşerek ihtiyaçları yakından takip eder.' }
+    ]},
+    { code:'F', title:'Eğitim, Gelişim ve Performans', scale:5, questions:[
+      { n:23, text:'İK, departmanımın eğitim ihtiyaçlarını bilir ve uygun eğitimleri sağlar.' },
+      { n:24, text:'Verilen eğitimler konu, süre ve zamanlama bakımından işime uygundur.' },
+      { n:25, text:'Performans değerlendirmeleri adil ve açık bir şekilde yapılır.' },
+      { n:26, text:'Terfi ve görev değişikliklerinde kişinin başarısı ve emeği dikkate alınır.' },
+      { n:27, text:'Başarılı çalışmalar İK tarafından fark edilir ve takdir edilir.' }
+    ]},
+    { code:'G', title:'Özlük İşleri ve Yasal Uyum', scale:5, questions:[
+      { n:28, text:'Özlük işlerim (sözleşme, bordro, SGK, izin, yan haklar vb.) doğru ve zamanında yürütülür.' },
+      { n:29, text:'Yan haklarım ve sosyal imkânlarım hakkında bana açıkça bilgi verilir.' },
+      { n:30, text:'İK, iş sağlığı ve güvenliği ile yasal kurallara uyumu takip eder ve uygular.' }
+    ]},
+    { code:'H', title:'Tavsiye ve Bağlılık', scale:10, note:'1 = Hiç katılmıyorum, 10 = Tamamen katılıyorum', questions:[
+      { n:31, text:'Kaya\'yı çalışmak için tanıdıklarıma tavsiye ederim.' },
+      { n:32, text:'Kaya\'da çalışmaya devam etmek istiyorum.' }
+    ]},
+    { code:'I', title:'Görüş ve Önerileriniz', type:'open', questions:[
+      { n:33, text:'İK Departmanı\'nın sizce en iyi yaptığı şeyler nelerdir?' },
+      { n:34, text:'İK\'nın daha iyi olmasını istediğiniz konular nelerdir?' },
+      { n:35, text:'Departmanınız ile İK arasındaki iş birliğini geliştirmek için öneriniz var mı?' },
+      { n:36, text:'Eklemek istediğiniz diğer görüş ve önerileriniz.' }
+    ]}
+  ]
+};
+
+function countAllQuestions(){
+  let count = SURVEY.info.length;
+  SURVEY.sections.forEach(s => count += s.questions.length);
+  return count;
+}
+const TOTAL_QUESTIONS = countAllQuestions();
+
+/* ---------- ROUTER ---------- */
+function getRoute(){
+  const hash = (window.location.hash || '').replace('#','').toLowerCase();
+  if(hash === 'admin' || hash === 'panel') return 'admin';
+  if(hash === 'thanks' || hash === 'tesekkurler') return 'thanks';
+  return 'survey';
+}
+window.addEventListener('hashchange', render);
+
+/* ---------- URL HELPERS ---------- */
+function getSurveyUrl(){
+  const u = window.location.href.split('#')[0];
+  return u;
+}
+function getAdminUrl(){
+  return getSurveyUrl() + '#admin';
+}
+
+/* ---------- PROGRESS TRACKING ---------- */
+function updateProgress(){
+  const form = document.getElementById('surveyForm');
+  if(!form){ document.getElementById('progressWrap').classList.remove('active'); return; }
+  document.getElementById('progressWrap').classList.add('active');
+  let filled = 0;
+  // Info fields
+  SURVEY.info.forEach(f => {
+    const el = form.querySelector('[name="info_'+f.id+'"]');
+    if(el && el.value && el.value.trim()) filled++;
+  });
+  // Likert + open
+  SURVEY.sections.forEach(s => {
+    s.questions.forEach(q => {
+      if(s.type === 'open'){
+        const el = form.querySelector('[name="q_'+q.n+'"]');
+        if(el && el.value && el.value.trim()) filled++;
+      } else {
+        const el = form.querySelector('[name="q_'+q.n+'"]:checked');
+        if(el) filled++;
+      }
+    });
+  });
+  const pct = Math.round((filled / TOTAL_QUESTIONS) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = '%' + pct + ' tamamlandı';
+}
+
+/* ---------- VALIDATION BANNER ---------- */
+let bannerTimer;
+function showBanner(text){
+  const b = document.getElementById('validationBanner');
+  document.getElementById('validationText').textContent = text;
+  b.classList.add('show');
+  clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(()=> b.classList.remove('show'), 4500);
+}
+
+/* ==========================================================================
+   PARTICIPANT VIEW — SURVEY FORM
+   ========================================================================== */
+function renderSurvey(){
+  document.getElementById('brandSub').textContent = 'İK Memnuniyet ve Değerlendirme Anketi';
+  document.getElementById('secureBadge').style.display = '';
+  const app = document.getElementById('app');
+
+  const today = new Date().toISOString().split('T')[0];
+
+  let html = `
+    <div class="hero">
+      <div class="kicker">Kaya Hotels &amp; Resorts • İnsan Kaynakları</div>
+      <h1>${SURVEY.meta.title}</h1>
+      <h2>${SURVEY.meta.subtitle}</h2>
+      <div class="hero-divider"></div>
+      <p>Bu anket; İnsan Kaynakları Departmanımızın size sunduğu hizmetleri değerlendirmek ve daha iyi hale getirmek amacıyla hazırlanmıştır.</p>
+      <p>Vereceğiniz cevaplar gizli tutulur ve yalnızca İK hizmetlerini iyileştirmek için kullanılır. Lütfen içtenlikle cevaplayınız. Katkılarınız için teşekkür ederiz.</p>
+      <div class="hero-meta">
+        <span class="chip gold">Doküman No: ${SURVEY.meta.docNo}</span>
+        <span class="chip">Revizyon: ${SURVEY.meta.revNo}</span>
+        <span class="chip">Yayın: ${SURVEY.meta.date}</span>
+        <span class="chip">Tahmini Süre: 5–7 dk</span>
+      </div>
+    </div>
+
+    <div class="scale-legend">
+      <div class="scale-legend-title">Değerlendirme Ölçeği (1 – 5)</div>
+      <div class="scale-grid">
+        ${SURVEY.scale5.map((t,i)=>`
+          <div class="scale-item">
+            <div class="scale-num">${i+1}</div>
+            <div class="scale-text">${t}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <form id="surveyForm" novalidate>
+      <!-- KATILIMCI BİLGİLERİ -->
+      <div class="section" data-section="info">
+        <div class="section-head">
+          <div class="section-badge">i</div>
+          <div class="section-title">
+            <h3>Katılımcı Bilgileri</h3>
+            <p>Anketi değerlendirecek ekip için temel bilgiler</p>
+          </div>
+        </div>
+        <div class="info-grid">
+          ${SURVEY.info.map(f => {
+            if(f.type === 'select'){
+              return `
+                <div class="field" data-field="info_${f.id}">
+                  <label class="field-label field-required">${f.label}</label>
+                  <select name="info_${f.id}" required>
+                    <option value="">Seçiniz...</option>
+                    ${f.options.map(o=>`<option value="${o}">${o}</option>`).join('')}
+                  </select>
+                </div>`;
+            }
+            if(f.type === 'date'){
+              return `
+                <div class="field" data-field="info_${f.id}">
+                  <label class="field-label field-required">${f.label}</label>
+                  <input type="date" name="info_${f.id}" value="${today}" required />
+                </div>`;
+            }
+            return `
+              <div class="field" data-field="info_${f.id}">
+                <label class="field-label field-required">${f.label}</label>
+                <input type="text" name="info_${f.id}" placeholder="${f.placeholder||''}" required />
+              </div>`;
+          }).join('')}
+        </div>
+      </div>
+  `;
+
+  // LIKERT + OPEN SECTIONS
+  SURVEY.sections.forEach(s => {
+    const isOpen = s.type === 'open';
+    const isNps = s.scale === 10;
+    html += `
+      <div class="section" data-section="${s.code}">
+        <div class="section-head">
+          <div class="section-badge">${s.code}</div>
+          <div class="section-title">
+            <h3>${s.title}</h3>
+            ${s.note ? `<p>${s.note}</p>` : isOpen ? '<p>Lütfen her alana kısa bir cevap yazınız</p>' : '<p>Her ifade için size en uygun seçeneği işaretleyiniz</p>'}
+          </div>
+        </div>
+    `;
+
+    s.questions.forEach(q => {
+      if(isOpen){
+        html += `
+          <div class="question" data-q="${q.n}">
+            <div class="q-row">
+              <div class="q-num">${q.n}</div>
+              <div class="q-text field-required">${q.text}</div>
+            </div>
+            <div class="field" style="margin-left:54px;margin-top:10px;margin-bottom:0">
+              <textarea name="q_${q.n}" placeholder="Görüşünüzü kısaca yazınız..." required></textarea>
+            </div>
+          </div>`;
+      } else if(isNps){
+        html += `
+          <div class="question" data-q="${q.n}">
+            <div class="q-row">
+              <div class="q-num">${q.n}</div>
+              <div class="q-text field-required">${q.text}</div>
+            </div>
+            <div class="likert likert-10">
+              ${Array.from({length:10}, (_,i)=>{
+                const v = i+1;
+                return `
+                  <div class="likert-opt">
+                    <input type="radio" name="q_${q.n}" value="${v}" id="q${q.n}_${v}" required />
+                    <label for="q${q.n}_${v}"><span class="l-num">${v}</span></label>
+                  </div>`;
+              }).join('')}
+            </div>
+            <div class="likert-ends">
+              <span>1 — Hiç katılmıyorum</span>
+              <span>10 — Tamamen katılıyorum</span>
+            </div>
+          </div>`;
+      } else {
+        html += `
+          <div class="question" data-q="${q.n}">
+            <div class="q-row">
+              <div class="q-num">${q.n}</div>
+              <div class="q-text field-required">${q.text}</div>
+            </div>
+            <div class="likert">
+              ${SURVEY.scale5.map((label,i)=>{
+                const v = i+1;
+                return `
+                  <div class="likert-opt">
+                    <input type="radio" name="q_${q.n}" value="${v}" id="q${q.n}_${v}" required />
+                    <label for="q${q.n}_${v}">
+                      <span class="l-num">${v}</span>
+                      <span class="l-text">${label}</span>
+                    </label>
+                  </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+      }
+    });
+
+    html += `</div>`;
+  });
+
+  html += `
+      <div class="submit-box">
+        <h3>Değerlendirmenizi Tamamlayın</h3>
+        <p>Yanıtlarınız gizli tutulur ve yalnızca Kalite Müdürlüğü tarafından görülür.<br/>Tüm soruları yanıtladığınızda anketi gönderebilirsiniz.</p>
+        <button type="submit" class="btn">Anketi Gönder</button>
+      </div>
+    </form>
+
+    <div class="doc-footer">
+      <strong>Kaya Hotels &amp; Resorts</strong> · Kalite &amp; Operasyonel Mükemmellik Müdürlüğü<br/>
+      Doküman: ${SURVEY.meta.docNo} · Rev. ${SURVEY.meta.revNo} · ${SURVEY.meta.date}
+    </div>
+  `;
+
+  app.innerHTML = html;
+
+  // Attach events
+  const form = document.getElementById('surveyForm');
+  form.addEventListener('change', updateProgress);
+  form.addEventListener('input', updateProgress);
+  form.addEventListener('submit', handleSurveySubmit);
+  updateProgress();
+}
+
+/* ---------- VALIDATION & SUBMIT ---------- */
+function validateSurvey(form){
+  let firstError = null;
+  let missing = 0;
+  // Clear previous errors
+  form.querySelectorAll('.field.error, .question.error').forEach(el => el.classList.remove('error'));
+  // Info fields
+  SURVEY.info.forEach(f => {
+    const el = form.querySelector('[name="info_'+f.id+'"]');
+    const wrap = form.querySelector('[data-field="info_'+f.id+'"]');
+    if(!el.value || !el.value.trim()){
+      wrap.classList.add('error');
+      if(!firstError) firstError = wrap;
+      missing++;
+    }
+  });
+  // Likert + open
+  SURVEY.sections.forEach(s => {
+    s.questions.forEach(q => {
+      const wrap = form.querySelector('[data-q="'+q.n+'"]');
+      let answered = false;
+      if(s.type === 'open'){
+        const el = form.querySelector('[name="q_'+q.n+'"]');
+        answered = el && el.value && el.value.trim().length > 0;
+      } else {
+        answered = !!form.querySelector('[name="q_'+q.n+'"]:checked');
+      }
+      if(!answered){
+        wrap.classList.add('error');
+        if(!firstError) firstError = wrap;
+        missing++;
+      }
+    });
+  });
+  return { valid: missing === 0, firstError, missing };
+}
+
+async function handleSurveySubmit(e){
+  e.preventDefault();
+  const form = e.target;
+  const result = validateSurvey(form);
+  if(!result.valid){
+    showBanner(result.missing + ' soru yanıtlanmayı bekliyor. Lütfen tüm alanları doldurunuz.');
+    if(result.firstError){
+      result.firstError.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+    return;
+  }
+
+  // Build response object
+  const fd = new FormData(form);
+  const response = {
+    id: 'R' + Date.now() + '-' + Math.random().toString(36).slice(2,8).toUpperCase(),
+    submittedAt: new Date().toISOString(),
+    info: {},
+    answers: {},
+    openResponses: {}
+  };
+  SURVEY.info.forEach(f => response.info[f.id] = fd.get('info_'+f.id));
+  SURVEY.sections.forEach(s => {
+    s.questions.forEach(q => {
+      const v = fd.get('q_'+q.n);
+      if(s.type === 'open') response.openResponses[q.n] = v;
+      else response.answers[q.n] = parseInt(v, 10);
+    });
+  });
+
+  // Save
+  const submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Gönderiliyor...';
+
+  try{
+    const existing = (await Storage.get('kaya-ik-anket:responses')) || [];
+    existing.push(response);
+    await Storage.set('kaya-ik-anket:responses', existing);
+    // Navigate to thanks
+    window.location.hash = 'thanks';
+  }catch(err){
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Anketi Gönder';
+    showBanner('Bir sorun oluştu, lütfen tekrar deneyiniz.');
+  }
+}
+
+/* ==========================================================================
+   THANKS VIEW
+   ========================================================================== */
+function renderThanks(){
+  document.getElementById('brandSub').textContent = 'Değerlendirme Tamamlandı';
+  document.getElementById('progressWrap').classList.remove('active');
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="section success-screen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>Teşekkür Ederiz</h2>
+      <p>Değerlendirmeniz başarıyla kaydedildi. Paylaştığınız görüşler, İnsan Kaynakları hizmetlerimizin geliştirilmesinde doğrudan kullanılacaktır.</p>
+      <p style="font-size:13px">Yanıtlarınız gizli tutulur ve yalnızca Kalite Müdürlüğü tarafından değerlendirilir.</p>
+      <div class="success-meta">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>${new Date().toLocaleString('tr-TR')}</span>
+      </div>
+    </div>
+  `;
+}
+
+/* ==========================================================================
+   ADMIN VIEW — LOGIN + DASHBOARD
+   ========================================================================== */
+function renderAdminLogin(){
+  document.getElementById('brandSub').textContent = 'Değerlendirme Paneli — Yetkili Girişi';
+  document.getElementById('progressWrap').classList.remove('active');
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="admin-login">
+      <div class="lock">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2>Değerlendirme Paneli</h2>
+      <p>Bu alan yalnızca İK &amp; Kalite Müdürlüğü yetkililerine açıktır</p>
+      <form id="loginForm">
+        <input type="password" name="pwd" placeholder="Panel Şifresi" autofocus autocomplete="current-password" />
+        <button type="submit" class="btn" style="width:100%">Panele Giriş</button>
+        <div class="error-msg" id="loginError"></div>
+      </form>
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);letter-spacing:.5px">
+        Kaya Hotels &amp; Resorts · Kalite &amp; Operasyonel Mükemmellik
+      </div>
+    </div>
+  `;
+  document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pwd = e.target.pwd.value;
+    if(pwd === ADMIN_PASSWORD){
+      sessionStorage.setItem('kaya-ik-admin', '1');
+      renderAdminDashboard();
+    } else {
+      document.getElementById('loginError').textContent = 'Şifre hatalı. Lütfen tekrar deneyiniz.';
+      e.target.pwd.value = '';
+      e.target.pwd.focus();
+    }
+  });
+}
+
+async function renderAdminDashboard(){
+  document.getElementById('brandSub').textContent = 'Değerlendirme Paneli';
+  document.getElementById('progressWrap').classList.remove('active');
+  const app = document.getElementById('app');
+
+  const responses = (await Storage.get('kaya-ik-anket:responses')) || [];
+  const stats = computeStats(responses);
+
+  app.innerHTML = `
+    <div class="admin-header">
+      <div>
+        <h2>Değerlendirme Paneli</h2>
+        <div class="subtitle">İK Memnuniyet Anketi · Canlı Sonuçlar</div>
+      </div>
+      <div class="admin-actions">
+        <button class="btn secondary btn-sm" id="refreshBtn">Yenile</button>
+        <button class="btn secondary btn-sm" id="exportBtn">CSV İndir</button>
+        <button class="btn secondary btn-sm" id="logoutBtn">Çıkış</button>
+      </div>
+    </div>
+
+    <!-- QR + URL -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Anket Paylaşım</div>
+      </div>
+      <div class="qr-panel">
+        <div class="qr-box"><div id="qrcode"></div></div>
+        <div class="qr-info">
+          <h4>Tek QR ile Tüm Katılımcılar</h4>
+          <p>Aşağıdaki QR kodunu tarayarak veya bağlantıyı paylaşarak tüm çalışanlar anketi telefon ya da bilgisayardan yanıtlayabilir. Katılımcılar yalnızca anket formunu görür; sonuçlar bu panele otomatik olarak akar.</p>
+          <div class="qr-url" id="qrUrl">${getSurveyUrl()}</div>
+          <div class="qr-actions">
+            <button class="btn btn-sm" id="copyUrlBtn">Bağlantıyı Kopyala</button>
+            <button class="btn secondary btn-sm" id="downloadQrBtn">QR'ı İndir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Toplam Katılım</div>
+        <div class="stat-value">${stats.total}</div>
+        <div class="stat-sub">Gönderilen yanıt sayısı</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Genel Memnuniyet</div>
+        <div class="stat-value">${stats.overall5 ? stats.overall5.toFixed(2) : '—'}</div>
+        <div class="stat-sub">1–5 ortalama (A–G bölümleri)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Bağlılık &amp; Tavsiye</div>
+        <div class="stat-value">${stats.overall10 ? stats.overall10.toFixed(1) : '—'}</div>
+        <div class="stat-sub">1–10 ortalama (H bölümü)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Son Katılım</div>
+        <div class="stat-value" style="font-size:18px;font-family:Inter,sans-serif">${stats.lastDate || '—'}</div>
+        <div class="stat-sub">${stats.lastTime || 'Henüz yanıt yok'}</div>
+      </div>
+    </div>
+
+    ${responses.length > 0 ? `
+    <!-- CHARTS -->
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title">Bölüm Ortalamaları (1–5)</div>
+        <div class="chart-wrap"><canvas id="sectionChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Departmana Göre Katılım</div>
+        <div class="chart-wrap"><canvas id="deptChart"></canvas></div>
+      </div>
+    </div>
+    ` : ''}
+
+    <!-- RESPONSES TABLE -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Gelen Yanıtlar</div>
+        <div style="font-size:12px;color:var(--muted)">${responses.length} kayıt</div>
+      </div>
+      ${responses.length === 0 ? `
+        <div class="empty-state">
+          <div class="empty-state-icon">◇</div>
+          <h4>Henüz yanıt gelmedi</h4>
+          <p>QR kodu veya bağlantı paylaşıldıktan sonra yanıtlar otomatik olarak bu panelde görünecektir.</p>
+        </div>
+      ` : `
+        <div style="overflow-x:auto">
+          <table class="responses-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Tarih</th>
+                <th>Departman</th>
+                <th>Pozisyon</th>
+                <th>Süre</th>
+                <th>Ort. (1–5)</th>
+                <th>Bağlılık</th>
+                <th>Detay</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${responses.slice().reverse().map((r,idx) => {
+                const avg5 = computeAvg5(r);
+                const avg10 = computeAvg10(r);
+                const pillClass = avg5 ? (avg5 >= 4 ? 'score-high' : avg5 >= 3 ? 'score-mid' : 'score-low') : '';
+                const d = new Date(r.submittedAt);
+                return `
+                  <tr>
+                    <td>${responses.length - idx}</td>
+                    <td>${d.toLocaleDateString('tr-TR')} ${d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</td>
+                    <td>${r.info.dept || '—'}</td>
+                    <td>${r.info.position || '—'}</td>
+                    <td>${r.info.tenure || '—'}</td>
+                    <td><span class="score-pill ${pillClass}">${avg5 ? avg5.toFixed(2) : '—'}</span></td>
+                    <td><strong style="color:var(--navy)">${avg10 ? avg10.toFixed(1) : '—'}</strong></td>
+                    <td><button class="view-btn" data-id="${r.id}">Görüntüle</button></td>
+                  </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `}
+    </div>
+
+    <div class="footer-signature">
+      <div class="sig-box">
+        <div class="k">Hazırlayan</div>
+        <div class="v">Kalite Müdürü</div>
+      </div>
+      <div class="sig-box">
+        <div class="k">Onaylayan</div>
+        <div class="v">Genel Müdür</div>
+      </div>
+    </div>
+
+    <div class="doc-footer">
+      <strong>Kaya Hotels &amp; Resorts</strong> · Kalite &amp; Operasyonel Mükemmellik Müdürlüğü<br/>
+      Doküman: ${SURVEY.meta.docNo} · Rev. ${SURVEY.meta.revNo} · ${SURVEY.meta.date}
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="responseModal">
+      <div class="modal-content">
+        <div class="modal-head">
+          <h3>Yanıt Detayı</h3>
+          <div class="modal-close" id="modalClose">✕</div>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+      </div>
+    </div>
+  `;
+
+  // QR code
+  const qrEl = document.getElementById('qrcode');
+  qrEl.innerHTML = '';
+  new QRCode(qrEl, {
+    text: getSurveyUrl(),
+    width: 180,
+    height: 180,
+    colorDark: '#0C1C40',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  // Charts
+  if(responses.length > 0){
+    renderSectionChart(stats);
+    renderDeptChart(stats);
+  }
+
+  // Events
+  document.getElementById('refreshBtn').addEventListener('click', renderAdminDashboard);
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    sessionStorage.removeItem('kaya-ik-admin');
+    window.location.hash = '';
+  });
+  document.getElementById('exportBtn').addEventListener('click', () => exportCSV(responses));
+  document.getElementById('copyUrlBtn').addEventListener('click', async () => {
+    try{
+      await navigator.clipboard.writeText(getSurveyUrl());
+      const btn = document.getElementById('copyUrlBtn');
+      const t = btn.textContent; btn.textContent = 'Kopyalandı ✓';
+      setTimeout(()=> btn.textContent = t, 2000);
+    }catch(e){
+      showBanner('Bağlantı kopyalanamadı');
+    }
+  });
+  document.getElementById('downloadQrBtn').addEventListener('click', downloadQR);
+
+  // Row view buttons
+  app.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => showResponseDetail(btn.dataset.id, responses));
+  });
+  const modal = document.getElementById('responseModal');
+  document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('show'));
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('show'); });
+}
+
+/* ---------- STATS ---------- */
+function computeAvg5(r){
+  const vals = [];
+  SURVEY.sections.forEach(s => {
+    if(s.scale === 5) s.questions.forEach(q => { if(r.answers[q.n]) vals.push(r.answers[q.n]); });
+  });
+  return vals.length ? vals.reduce((a,b)=>a+b,0) / vals.length : 0;
+}
+function computeAvg10(r){
+  const vals = [];
+  SURVEY.sections.forEach(s => {
+    if(s.scale === 10) s.questions.forEach(q => { if(r.answers[q.n]) vals.push(r.answers[q.n]); });
+  });
+  return vals.length ? vals.reduce((a,b)=>a+b,0) / vals.length : 0;
+}
+function computeStats(responses){
+  const stats = { total: responses.length, overall5: 0, overall10: 0, lastDate: null, lastTime: null, sectionAvgs: {}, deptCounts: {} };
+  if(responses.length === 0) return stats;
+  const all5 = []; const all10 = [];
+  SURVEY.sections.forEach(s => { if(s.scale) stats.sectionAvgs[s.code] = []; });
+  responses.forEach(r => {
+    SURVEY.sections.forEach(s => {
+      if(s.scale){
+        s.questions.forEach(q => {
+          const v = r.answers[q.n];
+          if(v){
+            if(s.scale === 5){ all5.push(v); stats.sectionAvgs[s.code].push(v); }
+            else { all10.push(v); stats.sectionAvgs[s.code].push(v); }
+          }
+        });
+      }
+    });
+    const dept = r.info.dept || 'Belirtilmemiş';
+    stats.deptCounts[dept] = (stats.deptCounts[dept] || 0) + 1;
+  });
+  stats.overall5 = all5.length ? all5.reduce((a,b)=>a+b,0)/all5.length : 0;
+  stats.overall10 = all10.length ? all10.reduce((a,b)=>a+b,0)/all10.length : 0;
+  // Section averages
+  Object.keys(stats.sectionAvgs).forEach(k => {
+    const arr = stats.sectionAvgs[k];
+    stats.sectionAvgs[k] = arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+  });
+  const last = responses[responses.length - 1];
+  const d = new Date(last.submittedAt);
+  stats.lastDate = d.toLocaleDateString('tr-TR');
+  stats.lastTime = d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+  return stats;
+}
+
+/* ---------- CHARTS ---------- */
+let chartRefs = {};
+function renderSectionChart(stats){
+  if(chartRefs.section) chartRefs.section.destroy();
+  const ctx = document.getElementById('sectionChart');
+  if(!ctx) return;
+  const sections5 = SURVEY.sections.filter(s => s.scale === 5);
+  chartRefs.section = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sections5.map(s => s.code + '. ' + s.title.split(' ')[0]),
+      datasets: [{
+        label: 'Ortalama (1–5)',
+        data: sections5.map(s => stats.sectionAvgs[s.code] || 0),
+        backgroundColor: '#B8973A',
+        borderColor: '#0C1C40',
+        borderWidth: 1.5,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, max: 5, ticks: { stepSize: 1, color:'#6b7280' }, grid:{color:'#e4dcc9'} },
+        x: { ticks: { color:'#6b7280', font:{size:10} }, grid:{display:false} }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => 'Ortalama: ' + c.parsed.y.toFixed(2) } }
+      }
+    }
+  });
+}
+function renderDeptChart(stats){
+  if(chartRefs.dept) chartRefs.dept.destroy();
+  const ctx = document.getElementById('deptChart');
+  if(!ctx) return;
+  const entries = Object.entries(stats.deptCounts).sort((a,b)=>b[1]-a[1]);
+  chartRefs.dept = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: entries.map(e => e[0]),
+      datasets: [{
+        data: entries.map(e => e[1]),
+        backgroundColor: ['#0C1C40','#B8973A','#3b4a72','#d4b256','#1a2c54','#c9a45a','#5d6b8f','#a98530','#2e7d4f','#846115','#8892a8','#6b7280'],
+        borderColor: '#fff',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'right', labels:{ font:{size:11}, color:'#1a1a1a', boxWidth:12 } }
+      }
+    }
+  });
+}
+
+/* ---------- RESPONSE DETAIL ---------- */
+function showResponseDetail(id, responses){
+  const r = responses.find(x => x.id === id);
+  if(!r) return;
+  const d = new Date(r.submittedAt);
+  let html = `
+    <div class="response-meta">
+      <div class="response-meta-item"><div class="k">Katılım ID</div><div class="v">${r.id}</div></div>
+      <div class="response-meta-item"><div class="k">Tarih / Saat</div><div class="v">${d.toLocaleString('tr-TR')}</div></div>
+      <div class="response-meta-item"><div class="k">Departman</div><div class="v">${r.info.dept || '—'}</div></div>
+      <div class="response-meta-item"><div class="k">Pozisyon</div><div class="v">${r.info.position || '—'}</div></div>
+      <div class="response-meta-item"><div class="k">Görev Süresi</div><div class="v">${r.info.tenure || '—'}</div></div>
+      <div class="response-meta-item"><div class="k">Değerlendirme Tarihi</div><div class="v">${r.info.date || '—'}</div></div>
+    </div>
+  `;
+  SURVEY.sections.forEach(s => {
+    html += `<div class="response-section">
+      <div class="response-section-title">${s.code}. ${s.title}</div>`;
+    s.questions.forEach(q => {
+      if(s.type === 'open'){
+        html += `<div style="margin-bottom:10px">
+          <div style="font-size:13px;color:var(--ink);margin-bottom:4px"><strong>${q.n}.</strong> ${q.text}</div>
+          <div class="response-open">${(r.openResponses[q.n] || '—').replace(/</g,'&lt;')}</div>
+        </div>`;
+      } else {
+        const v = r.answers[q.n];
+        const label = s.scale === 5 ? SURVEY.scale5[v-1] : v + '/10';
+        html += `<div class="response-q">
+          <div class="q"><strong>${q.n}.</strong> ${q.text}</div>
+          <div class="a">${v} <span style="font-weight:400;color:var(--muted);font-size:11px">(${label})</span></div>
+        </div>`;
+      }
+    });
+    html += `</div>`;
+  });
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('responseModal').classList.add('show');
+}
+
+/* ---------- EXPORT ---------- */
+function exportCSV(responses){
+  if(responses.length === 0){ showBanner('Dışa aktarılacak yanıt bulunamadı.'); return; }
+  const headers = ['ID','Tarih','Departman','Pozisyon','Görev Süresi','Değerlendirme Tarihi'];
+  SURVEY.sections.forEach(s => {
+    s.questions.forEach(q => { headers.push('S'+q.n); });
+  });
+  const rows = [headers];
+  responses.forEach(r => {
+    const row = [
+      r.id,
+      new Date(r.submittedAt).toLocaleString('tr-TR'),
+      r.info.dept || '',
+      r.info.position || '',
+      r.info.tenure || '',
+      r.info.date || ''
+    ];
+    SURVEY.sections.forEach(s => {
+      s.questions.forEach(q => {
+        if(s.type === 'open') row.push(r.openResponses[q.n] || '');
+        else row.push(r.answers[q.n] || '');
+      });
+    });
+    rows.push(row);
+  });
+  const csv = '\uFEFF' + rows.map(r => r.map(c => {
+    const s = String(c).replace(/"/g,'""');
+    return /[";,\n]/.test(s) ? '"' + s + '"' : s;
+  }).join(';')).join('\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Kaya_IK_Anket_Sonuclari_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadQR(){
+  const canvas = document.querySelector('#qrcode canvas');
+  const img = document.querySelector('#qrcode img');
+  let dataUrl;
+  if(canvas) dataUrl = canvas.toDataURL('image/png');
+  else if(img) dataUrl = img.src;
+  else { showBanner('QR kod oluşturulamadı'); return; }
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = 'Kaya_IK_Anket_QR.png';
+  a.click();
+}
+
+/* ==========================================================================
+   MAIN RENDER
+   ========================================================================== */
+function render(){
+  const route = getRoute();
+  // Clear any leftover modals
+  document.querySelectorAll('.modal.show').forEach(m => m.classList.remove('show'));
+  if(route === 'admin'){
+    if(sessionStorage.getItem('kaya-ik-admin') === '1') renderAdminDashboard();
+    else renderAdminLogin();
+  } else if(route === 'thanks'){
+    renderThanks();
+  } else {
+    renderSurvey();
+  }
+  window.scrollTo(0,0);
+}
+
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>
